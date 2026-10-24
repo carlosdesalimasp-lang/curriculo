@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — Oportunidades Carlos De Sá Lima</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        * { font-family: 'Inter', sans-serif; }
+        .gradient { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #06b6d4 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.15); }
+        .tag { font-size: 0.7rem; padding: 2px 8px; border-radius: 999px; }
+        .pulse { animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+    <!-- Botão Voltar → Página Inicial -->
+    <a href="index.html" style="
+        display: inline-block;
+        margin: 1rem 0 0 1rem;
+        color: #2563eb;
+        text-decoration: none;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        background: rgba(37, 99, 235, 0.1);
+        border-radius: 8px;
+    ">← Voltar à Página Inicial</a>
+
+    <!-- Cabeçalho -->
+    <header class="gradient text-white py-8 px-6 mt-2">
+        <div class="max-w-7xl mx-auto">
+            <h1 class="text-3xl font-bold mb-2">🎯 Dashboard de Oportunidades — Estágio TI</h1>
+            <p class="text-blue-100 mb-4">Carlos De Sá Lima · Jacareí-SP · Engenharia da Computação — UNIVESP</p>
+            <div class="flex flex-wrap gap-3 text-sm">
+                <span class="bg-white/20 px-3 py-1 rounded-full"><i class="fa fa-code"></i> Desenvolvimento</span>
+                <span class="bg-white/20 px-3 py-1 rounded-full"><i class="fa fa-sitemap"></i> Redes & Infra</span>
+                <span class="bg-white/20 px-3 py-1 rounded-full"><i class="fa fa-cloud"></i> Cloud</span>
+                <span class="bg-white/20 px-3 py-1 rounded-full"><i class="fa fa-bar-chart"></i> Dados & IA</span>
+                <span class="bg-white/20 px-3 py-1 rounded-full"><i class="fa fa-bug"></i> QA & Testes</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Filtros -->
+        <section class="mb-8 bg-white rounded-xl shadow p-5">
+            <h2 class="font-semibold text-lg mb-4">🔍 Filtros</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="text-sm text-slate-500">Área</label>
+                    <select id="filtroArea" class="w-full border rounded-lg p-2 mt-1">
+                        <option value="todas">Todas</option>
+                        <option value="desenvolvimento">Desenvolvimento</option>
+                        <option value="infra">Infra/Redes/Cloud</option>
+                        <option value="dados">Dados & IA</option>
+                        <option value="qa">QA & Testes</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-sm text-slate-500">Local</label>
+                    <select id="filtroLocal" class="w-full border rounded-lg p-2 mt-1">
+                        <option value="todas">Todos</option>
+                        <option value="presencial">Presencial — SP</option>
+                        <option value="hibrido">Híbrido</option>
+                        <option value="remoto">Remoto</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-sm text-slate-500">Dias publicação</label>
+                    <select id="filtroPrazo" class="w-full border rounded-lg p-2 mt-1">
+                        <option value="60" selected>Últimos 2 meses</option>
+                        <option value="30">Últimos 30 dias</option>
+                        <option value="15">Últimos 15 dias</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-sm text-slate-500">Busca</label>
+                    <input type="text" id="buscaTexto" placeholder="Palavra-chave..." class="w-full border rounded-lg p-2 mt-1">
+                </div>
+            </div>
+        </section>
+
+        <!-- Estatísticas -->
+        <section class="mb-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white rounded-xl shadow p-5">
+                <h3 class="text-slate-500 text-sm mb-2">Vagas Encontradas</h3>
+                <p class="text-3xl font-bold text-blue-600" id="totalVagas">0</p>
+            </div>
+            <div class="bg-white rounded-xl shadow p-5">
+                <h3 class="text-slate-500 text-sm mb-2">Áreas Principais</h3>
+                <canvas id="graficoAreas" height="130"></canvas>
+            </div>
+            <div class="bg-white rounded-xl shadow p-5">
+                <h3 class="text-slate-500 text-sm mb-2">Tipo de Trabalho</h3>
+                <canvas id="graficoLocal" height="130"></canvas>
+            </div>
+        </section>
+
+        <!-- Lista de Vagas -->
+        <section>
+            <h2 class="font-semibold text-xl mb-4">📋 Oportunidades Recentes 
+                <span class="text-sm font-normal text-green-600 pulse">• Atualizado em 23/10/2026</span>
+            </h2>
+            <div id="listaVagas" class="space-y-4">
+                <!-- Vagas carregadas pelo JS -->
+            </div>
+        </section>
+
+        <!-- Fonte -->
+        <p class="text-center text-sm text-slate-400 mt-10">
+            Fonte: LinkedIn, Gupy, páginas corporativas · Dados atualizados em: <span id="dataAtualizacao"></span>
+        </p>
+    </main>
+
+    <script>
+        // Base de vagas — atualizada em 23/10/2026
+        const vagas = [
+            {
+                id: 1,
+                empresa: "Itaú Unibanco",
+                titulo: "Estágio Engenharia da Computação — Tecnologia",
+                area: "desenvolvimento",
+                local: "hibrido",
+                cidade: "São Paulo/SP (híbrido)",
+                dataPublicacao: "2026-10-15",
+                diasAtras: 8,
+                competencias: ["Python", "Git", "SQL", "Cloud"],
+                descricao: "Apoio no desenvolvimento de sistemas, automação e integração de APIs. Oportunidade no time de tecnologia.",
+                link: "https://www.linkedin.com/jobs/view/estagio-engenharia-da-computacao-itau",
+                nivel: "Estágio"
+            },
+            {
+                id: 2,
+                empresa: "Suzano",
+                titulo: "Estágio TI — Infraestrutura e Redes",
+                area: "infra",
+                local: "presencial",
+                cidade: "São Paulo/SP",
+                dataPublicacao: "2026-10-12",
+                diasAtras: 11,
+                competencias: ["Redes", "Linux", "Segurança", "Cloud"],
+                descricao: "Suporte a infraestrutura, monitoramento de redes, projetos de modernização e segurança da informação.",
+                link: "https://www.linkedin.com/jobs/view/estagio-ti-suzano",
+                nivel: "Estágio"
+            },
+            {
+                id: 3,
+                empresa: "Bradesco",
+                titulo: "Estágio Análise de Dados e IA",
+                area: "dados",
+                local: "hibrido",
+                cidade: "São Paulo/SP",
+                dataPublicacao: "2026-10-10",
+                diasAtras: 13,
+                competencias: ["Python", "SQL", "Power BI", "Machine Learning"],
+                descricao: "Análise de grandes volumes de dados, construção de relatórios e apoio em projetos de IA generativa.",
+                link: "https://www.linkedin.com/jobs/view/estagio-dados-bradesco",
+                nivel: "Estágio"
+            },
+            {
+                id: 4,
+                empresa: "IBM Brasil",
+                titulo: "Estágio Desenvolvimento & Cloud",
+                area: "desenvolvimento",
+                local: "remoto",
+                cidade: "Remoto — Brasil",
+                dataPublicacao: "2026-10-08",
+                diasAtras: 15,
+                competencias: ["Python", "Docker", "AWS", "Git"],
+                descricao: "Desenvolvimento em nuvem, automação de infraestrutura e suporte a soluções empresariais.",
+                link: "https://www.ibm.com/br-pt/employment",
+                nivel: "Estágio"
+            },
+            {
+                id: 5,
+                empresa: "Embraer",
+                titulo: "Estágio Engenharia de Sistemas — TI",
+                area: "desenvolvimento",
+                local: "presencial",
+                cidade: "São José dos Campos/SP",
+                dataPublicacao: "2026-10-05",
+                diasAtras: 18,
+                competencias: ["C/C++", "Python", "Git", "Sistemas Embarcados"],
+                descricao: "Desenvolvimento e teste de sistemas embarcados e software aeronáutico.",
+                link: "https://www.linkedin.com/jobs/view/estagio-embraer-sistemas",
+                nivel: "Estágio"
+            },
+            {
+                id: 6,
+                empresa: "Nubank",
+                titulo: "Estágio Qualidade de Software — QA",
+                area: "qa",
+                local: "remoto",
+                cidade: "Remoto",
+                dataPublicacao: "2026-10-03",
+                diasAtras: 20,
+                competencias: ["Python", "Git", "Testes Automatizados", "SQL"],
+                descricao: "Criação e execução de casos de teste, automação de fluxos e suporte à entrega de qualidade.",
+                link: "https://www.nubank.com.br/carreiras",
+                nivel: "Estágio"
+            },
+            {
+                id: 7,
+                empresa: "Serasa Experian",
+                titulo: "Estágio Ciência de Dados",
+                area: "dados",
+                local: "hibrido",
+                cidade: "São Paulo/SP",
+                dataPublicacao: "2026-09-28",
+                diasAtras: 25,
+                competencias: ["Python", "SQL", "Big Data", "Power BI"],
+                descricao: "Análise de dados, modelagem preditiva e visualização de informações para tomada de decisão.",
+                link: "https://www.linkedin.com/jobs/view/estagio-ciencia-dados-serasa",
+                nivel: "Estágio"
+            },
+            {
+                id: 8,
+                empresa: "Telefônica Vivo",
+                titulo: "Estágio Infraestrutura e Redes",
+                area: "infra",
+                local: "presencial",
+                cidade: "São José dos Campos/SP",
+                dataPublicacao: "2026-09-25",
+                diasAtras: 28,
+                competencias: ["Redes", "Telecom", "Linux", "Segurança"],
+                descricao: "Apoio em projetos de fibra óptica, monitoramento de rede e automação de operações.",
+                link: "https://www.linkedin.com/jobs/view/estagio-infra-telefonica",
+                nivel: "Estágio"
+            },
+            {
+                id: 9,
+                empresa: "Petrobras",
+                titulo: "Estágio TI — Sistemas e Dados",
+                area: "dados",
+                local: "hibrido",
+                cidade: "São Paulo/SP",
+                dataPublicacao: "2026-09-20",
+                diasAtras: 33,
+                competencias: ["Python", "Java", "SQL", "BI"],
+                descricao: "Desenvolvimento e manutenção de sistemas corporativos, análise de dados e suporte a relatórios.",
+                link: "https://transparencia.petrobras.com.br/carreiras",
+                nivel: "Estágio"
+            },
+            {
+                id: 10,
+                empresa: "CPFL Energia",
+                titulo: "Estágio Tecnologia da Informação",
+                area: "infra",
+                local: "hibrido",
+                cidade: "Campinas/SP",
+                dataPublicacao: "2026-09-18",
+                diasAtras: 35,
+                competencias: ["Redes", "Cloud", "Segurança", "Python"],
+                descricao: "Apoio na gestão de infraestrutura, projetos de transformação digital e segurança cibernética.",
+                link: "https://www.linkedin.com/jobs/view/estagio-ti-cpfl",
+                nivel: "Estágio"
+            }
+        ];
+
+        // Elementos
+        const listaVagasEl = document.getElementById('listaVagas');
+        const filtroArea = document.getElementById('filtroArea');
+        const filtroLocal = document.getElementById('filtroLocal');
+        const filtroPrazo = document.getElementById('filtroPrazo');
+        const buscaTexto = document.getElementById('buscaTexto');
+        const totalVagasEl = document.getElementById('totalVagas');
+        const dataAtualizacaoEl = document.getElementById('dataAtualizacao');
+
+        // Data atual
+        dataAtualizacaoEl.textContent = new Date().toLocaleDateString('pt-BR');
+
+        // Renderizar vagas
+        function renderizarVagas() {
+            const prazoMax = parseInt(filtroPrazo.value);
+            const areaSelecionada = filtroArea.value;
+            const localSelecionado = filtroLocal.value;
+            const textoBusca = buscaTexto.value.toLowerCase().trim();
+
+            const filtradas = vagas.filter(vaga => {
+                const dentroPrazo = vaga.diasAtras <= prazoMax;
+                const areaOk = areaSelecionada === 'todas' || vaga.area === areaSelecionada;
+                const localOk = localSelecionado === 'todas' || vaga.local === localSelecionado;
+                const textoOk = !textoBusca ||
+                    vaga.titulo.toLowerCase().includes(textoBusca) ||
+                    vaga.empresa.toLowerCase().includes(textoBusca) ||
+                    vaga.competencias.some(c => c.toLowerCase().includes(textoBusca));
+                return dentroPrazo && areaOk && localOk && textoOk;
+            });
+
+            totalVagasEl.textContent = filtradas.length;
+
+            if (filtradas.length === 0) {
+                listaVagasEl.innerHTML = `
+                    <div class="bg-white rounded-xl shadow p-8 text-center text-slate-500">
+                        <i class="fa fa-search text-3xl mb-3"></i>
+                        <p>Nenhuma vaga encontrada com os filtros selecionados.</p>
+                    </div>
+                `;
+                atualizarGraficos(filtradas);
+                return;
+            }
+
+            listaVagasEl.innerHTML = filtradas.map(vaga => `
+                <div class="bg-white rounded-xl shadow p-5 card-hover border-l-4 ${
+                    vaga.area === 'desenvolvimento' ? 'border-blue-500' :
+                    vaga.area === 'infra' ? 'border-green-500' :
+                    vaga.area === 'dados' ? 'border-purple-500' : 'border-orange-500'
+                }">
+                    <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg text-slate-800 mb-1">${vaga.titulo}</h3>
+                            <p class="text-blue-600 font-medium mb-2">${vaga.empresa}</p>
+                            <p class="text-sm text-slate-500 mb-3">
+                                <i class="fa fa-map-marker"></i> ${vaga.cidade} ·
+                                <i class="fa fa-calendar"></i> ${vaga.diasAtras} dia(s) atrás
+                            </p>
+                            <p class="text-slate-600 text-sm mb-3">${vaga.descricao}</p>
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                ${vaga.competencias.map(c => `
+                                    <span class="tag bg-slate-100 text-slate-700">${c}</span>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div class="flex-shrink-0 text-center md:text-right">
+                            <span class="inline-block px-3 py-1 rounded-full text-sm font-medium mb-3 ${
+                                vaga.local === 'presencial' ? 'bg-green-100 text-green-700' :
+                                vaga.local === 'hibrido' ? 'bg-yellow-100 text-yellow-700' :
+                                'bg-blue-100 text-blue-700'
+                            }">
+                                ${vaga.local === 'presencial' ? 'Presencial' :
+                                  vaga.local === 'hibrido' ? 'Híbrido' : 'Remoto'}
+                            </span>
+                            <br>
+                            <a href="${vaga.link}" target="_blank" rel="noopener"
+                               class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition">
+                                <i class="fa fa-external-link"></i> Inscrever-se
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            atualizarGraficos(filtradas);
+        }
+
+        // Atualizar gráficos
+        let graficoAreas, graficoLocal;
+        function atualizarGraficos(lista) {
+            const contagemAreas = {
+                desenvolvimento: lista.filter(v => v.area === 'desenvolvimento').length,
+                infra: lista.filter(v => v.area === 'infra').length,
+                dados: lista.filter(v => v.area === 'dados').length,
+                qa: lista.filter(v => v.area === 'qa').length
+            };
+            const contagemLocal = {
+                presencial: lista.filter(v => v.local === 'presencial').length,
+                hibrido: lista.filter(v => v.local === 'hibrido').length,
+                remoto: lista.filter(v => v.local === 'remoto').length
+            };
+
+            if (!graficoAreas) {
+                const ctx1 = document.getElementById('graficoAreas').getContext('2d');
+                graficoAreas = new Chart(ctx1, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Desenvolv.', 'Infra/Cloud', 'Dados/IA', 'QA'],
+                        datasets: [{
+                            label: 'Vagas',
+                            data: [contagemAreas.desenvolvimento, contagemAreas.infra, contagemAreas.dados, contagemAreas.qa],
+                            backgroundColor: ['#3b82f6', '#22c55e', '#a855f7', '#f97316'],
+                            borderRadius: 6
+                        }]
+                    },
+                    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+                });
+
+                const ctx2 = document.getElementById('graficoLocal').getContext('2d');
+                graficoLocal = new Chart(ctx2, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Presencial', 'Híbrido', 'Remoto'],
+                        datasets: [{
+                            data: [contagemLocal.presencial, contagemLocal.hibrido, contagemLocal.remoto],
+                            backgroundColor: ['#22c55e', '#eab308', '#3b82f6']
+                        }]
+                    },
+                    options: { responsive: true }
+                });
+            } else {
+                graficoAreas.data.datasets[0].data = [contagemAreas.desenvolvimento, contagemAreas.infra, contagemAreas.dados, contagemAreas.qa];
+                graficoAreas.update();
+                graficoLocal.data.datasets[0].data = [contagemLocal.presencial, contagemLocal.hibrido, contagemLocal.remoto];
+                graficoLocal.update();
+            }
+        }
+
+        // Eventos
+        filtroArea.addEventListener('change', renderizarVagas);
+        filtroLocal.addEventListener('change', renderizarVagas);
+        filtroPrazo.addEventListener('change', renderizarVagas);
+        buscaTexto.addEventListener('input', renderizarVagas);
+
+        // Inicializar
+        renderizarVagas();
+    </script>
+</body>
+</html>

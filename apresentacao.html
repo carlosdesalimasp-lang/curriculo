@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apresentação — Carlos De Sá Lima</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; }
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e40af);
+            min-height: 100vh;
+            color: white;
+            padding: 2rem;
+        }
+        .container { max-width: 800px; margin: 0 auto; text-align: center; }
+        .voltar {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: #bfdbfe;
+            text-decoration: none;
+        }
+        .voltar:hover { text-decoration: underline; }
+        h1 { margin-bottom: 2rem; }
+        .video-container {
+            background: rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        /* Player embutido responsivo — 16:9 */
+        .embed-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            background: #000;
+        }
+        .embed-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .link-video {
+            display: inline-block;
+            background: #ff0000;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+        .link-video:hover {
+            background: #cc0000;
+            transform: translateY(-2px);
+        }
+        .aviso {
+            background: rgba(255,193,7,0.15);
+            border: 1px solid rgba(255,193,7,0.4);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            color: #ffd54f;
+            font-size: 0.9rem;
+        }
+        .mensagem {
+            background: rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: left;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="voltar">← Voltar à Página Inicial</a>
+        
+        <h1>🎬 Apresentação</h1>
+        
+        <div class="video-container">
+            <h3>Vídeo de Apresentação</h3>
+
+            <!-- ✅ VÍDEO APARECE DIRETO NA PÁGINA -->
+            <div class="embed-wrapper">
+                <iframe 
+                    src="https://www.youtube.com/embed/QtCNCNnhTfo"
+                    title="Vídeo de Apresentação — Carlos De Sá Lima"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+            <div class="aviso">
+                💡 Se o vídeo não carregar, clique no botão abaixo para assistir no YouTube
+            </div>
+            
+            <!-- ✅ Link de reserva em nova aba -->
+            <a href="https://youtu.be/QtCNCNnhTfo" target="_blank" class="link-video">
+                ▶️ Assistir no YouTube
+            </a>
+            
+            <p style="margin-top: 1rem; color: #bfdbfe; font-size: 0.9rem;">
+                Confirme que o vídeo está como <strong>"Não listado"</strong> no YouTube para visualização.
+            </p>
+        </div>
+
+        <div class="mensagem">
+            <h3>💬 Mensagem</h3>
+            <p>Olá! Sou Carlos De Sá Lima, estudante de Engenharia da Computação pela UNIVESP. Busco minha primeira oportunidade na área de TI para aplicar e expandir meus conhecimentos em programação, redes e tecnologia. Sou dedicado, curioso e sempre disposto a aprender. Agradeço pela atenção e fico à disposição para conversarmos!</p>
+        </div>
+
+        <a href="index.html" class="voltar" style="margin-top: 2rem;">← Voltar à Página Inicial</a>
+    </div>
+</body>
+</html>

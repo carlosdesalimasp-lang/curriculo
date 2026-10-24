@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carlos De Sá Lima — Currículo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; }
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e40af);
+            min-height: 100vh;
+            color: white;
+            padding: 2rem;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .subtitulo { color: #bfdbfe; margin-bottom: 3rem; }
+        .cards { display: grid; gap: 1.5rem; }
+        .card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: transform 0.3s;
+            text-decoration: none;
+            color: white;
+            cursor: pointer;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.18);
+        }
+        .card h2 { margin-bottom: 0.5rem; }
+        .card p { color: #bfdbfe; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 Carlos De Sá Lima</h1>
+        <p class="subtitulo">Engenharia da Computação — UNIVESP | Jacareí-SP</p>
+        
+        <div class="cards">
+            <a href="curriculo.html" class="card">
+                <h2>📋 Currículo</h2>
+                <p>Dados profissionais, formação e competências</p>
+            </a>
+            <a href="apresentacao.html" class="card">
+                <h2>🎬 Apresentação</h2>
+                <p>Vídeo e mensagem de apresentação</p>
+            </a>
+            <a href="oportunidades.html" class="card">
+                <h2>📊 Acompanhamento de Vagas</h2>
+                <p>Dashboard com processos seletivos e oportunidades</p>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
